@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__unity-mcp__Unity_GetProjectData",
+      "mcp__unity-mcp__Unity_GetConsoleLogs",
+      "mcp__unity-mcp__Unity_ManageEditor",
+      "mcp__unity-mcp__Unity_ManageScene",
+      "mcp__unity-mcp__Unity_ListResources",
+      "mcp__unity-mcp__Unity_GetUserGuidelines",
+      "mcp__unity-mcp__Unity_GetSha"
+    ]
+  }
+}
