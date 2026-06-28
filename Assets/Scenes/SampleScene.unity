@@ -4893,6 +4893,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 596663094}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &607475913 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+  m_PrefabInstance: {fileID: 1005967838}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &643332064
 GameObject:
   m_ObjectHideFlags: 0
@@ -7426,6 +7431,7 @@ GameObject:
   - component: {fileID: 937778439}
   - component: {fileID: 937778438}
   - component: {fileID: 937778442}
+  - component: {fileID: 937778443}
   m_Layer: 0
   m_Name: HUD_Canvas
   m_TagString: Untagged
@@ -7455,11 +7461,11 @@ RectTransform:
   - {fileID: 54881290}
   - {fileID: 32260905}
   - {fileID: 1840181342}
-  m_Father: {fileID: 1284940139}
+  m_Father: {fileID: 607475913}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.25}
+  m_AnchoredPosition: {x: 0, y: 1.11144}
   m_SizeDelta: {x: 978.66675, y: 672.3333}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &937778438
@@ -7566,6 +7572,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
+--- !u!114 &937778443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937778436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c1a251d144782458626e66c069c318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SBAR.UI.HudFollow
+  cam: {fileID: 1284940139}
+  distance: 1.1
+  heightOffset: -0.15
+  smooth: 10
 --- !u!1 &959601685
 GameObject:
   m_ObjectHideFlags: 0
@@ -8032,7 +8054,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1767192434, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 937778437}
     m_AddedComponents:
