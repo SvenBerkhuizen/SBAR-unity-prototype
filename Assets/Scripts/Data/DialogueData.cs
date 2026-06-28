@@ -121,6 +121,20 @@ namespace SBAR.Core
                 targetPart = SBARPart.Situation,
                 notebookLine = "",
                 isRelevant = false
+            },
+            new QuestionAnswer {
+                question = "Wilt u iets te drinken?",
+                answer = "Nee, dank je, niet nu.",
+                targetPart = SBARPart.Situation,
+                notebookLine = "",
+                isRelevant = false
+            },
+            new QuestionAnswer {
+                question = "Heeft u vannacht goed geslapen?",
+                answer = "Gaat wel, maar daar gaat het nu niet om hè.",
+                targetPart = SBARPart.Situation,
+                notebookLine = "",
+                isRelevant = false
             }
         };
 

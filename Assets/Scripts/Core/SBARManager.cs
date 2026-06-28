@@ -41,6 +41,7 @@ namespace SBAR.Core
 
         private bool[] _vragenGesteld;
         private int _relevantVragenGesteld;
+        private int _irrelevanteVragenGesteld;
         private readonly HashSet<MeasurementDevice> _gemeten = new HashSet<MeasurementDevice>();
         private int _gekozenAanbeveling = -1;
         private InvestigationResult _satResult, _bpResult, _tempResult;
@@ -113,6 +114,7 @@ namespace SBAR.Core
             Notebook.Clear();
             _vragenGesteld = null;
             _relevantVragenGesteld = 0;
+            _irrelevanteVragenGesteld = 0;
             _gemeten.Clear();
             _gekozenAanbeveling = -1;
             investigationTracker?.Reset();
@@ -176,6 +178,7 @@ namespace SBAR.Core
 
             _vragenGesteld = new bool[dialogue.vragen.Count];
             _relevantVragenGesteld = 0;
+            _irrelevanteVragenGesteld = 0;
 
             var opties = new List<string>();
             foreach (var qa in dialogue.vragen) opties.Add(qa.question);
@@ -194,9 +197,13 @@ namespace SBAR.Core
 
             var qa = dialogue.vragen[index];
             subtitles?.Show(dialogue.patientNaam, qa.answer);
-            Notebook.Add(qa.targetPart, qa.notebookLine);
+            // Alleen relevante vragen leveren een notitie op; niet-relevante vragen
+            // zijn 'fout' en voegen niets toe aan het SBAR-dossier.
+            if (qa.isRelevant && !string.IsNullOrEmpty(qa.notebookLine))
+                Notebook.Add(qa.targetPart, qa.notebookLine);
             choiceMenu?.SetOptionInteractable(index, false);
             if (qa.isRelevant) _relevantVragenGesteld++;
+            else _irrelevanteVragenGesteld++;
 
             int aantalGesteld = _vragenGesteld.Count(b => b);
             if (aantalGesteld >= dialogue.minVragenVoorVervolgStap)
@@ -334,6 +341,12 @@ namespace SBAR.Core
                 lijnen.Add(new FeedbackLine("Vragen", $"{_relevantVragenGesteld} van {totaalRelevant} relevante vragen gesteld", FeedbackStatus.Gedeeltelijk));
             else
                 lijnen.Add(new FeedbackLine("Vragen", "alle relevante vragen gesteld", FeedbackStatus.Goed));
+
+            // Niet-relevante vragen = foutkeuze: kost tijd, minder gericht uitvragen.
+            if (_irrelevanteVragenGesteld > 0)
+                lijnen.Add(new FeedbackLine("Vraagkeuze",
+                    $"{_irrelevanteVragenGesteld} niet-relevante vraag/vragen gesteld — vraag gerichter uit",
+                    FeedbackStatus.Gedeeltelijk));
 
             lijnen.Add(Notebook.HasContent(SBARPart.Situation)
                 ? new FeedbackLine("Situation", "volledig", FeedbackStatus.Goed)
