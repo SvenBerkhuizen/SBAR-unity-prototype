@@ -9,14 +9,16 @@ using UnityEditor;
 public static class SBARHudFix
 {
     // TUNE — anchoredPosition (x,y) in UI-punten
+    static readonly Vector2 INSTRUCTIE_POS = new Vector2(0f, 230f);  // instructie hoger weg van keuzemenu
     static readonly Vector2 KEUZE_POS      = new Vector2(0f, 90f);   // was (0,-30): nu hoger
-    static readonly Vector2 ONDERTITEL_POS = new Vector2(0f, -200f); // antwoord-balk iets lager
+    static readonly Vector2 ONDERTITEL_POS = new Vector2(0f, -210f); // antwoord-balk lager weg van knoppen
     static readonly Vector2 VOLGENDE_POS   = new Vector2(250f, -250f);
     static readonly Vector2 HERHAAL_POS    = new Vector2(0f, -250f);
 
     [MenuItem("SBAR/Fix HUD Layout")]
     static void Fix()
     {
+        Move("InstructieTekst",  INSTRUCTIE_POS);
         Move("KeuzeMenuPaneel", KEUZE_POS);
         Move("OndertitelPaneel", ONDERTITEL_POS);
         Move("VolgendeStapKnop", VOLGENDE_POS);

@@ -30,6 +30,7 @@ namespace SBAR.Interaction
         {
             base.Awake();
             _collider = GetComponent<Collider>();
+            if (waardeLabel != null) waardeLabel.lineSpacing = 25f; // regels uit elkaar
             ShowName();
         }
 
@@ -88,14 +89,15 @@ namespace SBAR.Interaction
 
         private void ShowName()
         {
-            if (waardeLabel != null) waardeLabel.text = deviceNaam + "\n[meet: E / klik]";
+            if (waardeLabel != null) waardeLabel.text = $"<b>{deviceNaam}</b>\n\n[meet: E / klik]";
         }
 
         private void ShowReadings()
         {
             if (waardeLabel == null) return;
             var sb = new System.Text.StringBuilder();
-            sb.AppendLine(deviceNaam);
+            sb.AppendLine($"<b>{deviceNaam}</b>");
+            sb.AppendLine();
             foreach (var r in _readings) sb.AppendLine(r.ToLine());
             waardeLabel.text = sb.ToString().TrimEnd();
         }

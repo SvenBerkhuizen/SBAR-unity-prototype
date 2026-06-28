@@ -59,7 +59,7 @@ namespace SBAR.Interaction
         {
             if (labelText == null) return;
             labelText.text = gevonden
-                ? $"{displayLabel}\n<color=#55CC66>✓ onderzocht</color>"
+                ? $"{displayLabel}\n<color=#55CC66>[v] onderzocht</color>"
                 : $"{displayLabel}\n[onderzoek: E / klik]";
         }
     }

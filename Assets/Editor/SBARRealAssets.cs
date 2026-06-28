@@ -18,6 +18,7 @@ public static class SBARRealAssets
     const string P_BED       = "Assets/Imported/Bed/hospital_bed.glb";
     const string P_MONITOR   = "Assets/Imported/Monitor/source/monitor.fbx";
     const string P_SPHYGMO   = "Assets/Imported/Sphygmomanometer/source/ketuatukei3.glb";
+    const string P_THERMO    = "Assets/Imported/Thermometer/source/Termometer.fbx";
     const string P_CLIPBOARD = "Assets/Imported/Clipboard/clipboard.glb";
     const string P_INFUUS    = "Assets/Imported/Misc/15.glb";
     const string P_AUDIO     = "Assets/Imported/Audio/hospital-ambient.mp3";
@@ -50,6 +51,11 @@ public static class SBARRealAssets
     static readonly Vector3 BP_EULER = new Vector3(0f, 0f, 0f);
     static readonly Vector3 BP_SCALE = new Vector3(1f, 1f, 1f);
 
+    // Thermometer — child van 'Thermometer' device (schaal blind gegokt, bijstellen indien nodig)
+    static readonly Vector3 THERMO_POS   = new Vector3(0f, 0f, 0f);
+    static readonly Vector3 THERMO_EULER = new Vector3(0f, 0f, 0f);
+    static readonly Vector3 THERMO_SCALE = new Vector3(1f, 1f, 1f);
+
     // Losse props (wereld-positie, onder holder 'ImportedProps')
     static readonly Vector3 INFUUS_POS   = new Vector3(-1.9f, 0f, 3.2f);
     static readonly Vector3 INFUUS_EULER = Vector3.zero;
@@ -80,12 +86,13 @@ public static class SBARRealAssets
         // Meetapparaten: model over de cube (component + Label + collider blijven)
         SwapVisual("Saturatiemeter", P_MONITOR, MON_POS, MON_EULER, MON_SCALE, null);
         SwapVisual("Bloeddrukband",  P_SPHYGMO, BP_POS,  BP_EULER,  BP_SCALE,  null);
+        SwapVisual("Thermometer",    P_THERMO,  THERMO_POS, THERMO_EULER, THERMO_SCALE, null);
 
         // Losse props
         var holder = GameObject.Find("ImportedProps") ?? new GameObject("ImportedProps");
         ClearChildren(holder.transform);
         Place(Load(P_INFUUS),    holder.transform, INFUUS_POS, INFUUS_EULER, INFUUS_SCALE, "Infuusstandaard", world:true);
-        Place(Load(P_CLIPBOARD), holder.transform, CLIP_POS,   CLIP_EULER,   CLIP_SCALE,   "Klembord",        world:true);
+        PlaceNotebookClipboard(holder.transform);
 
         // Sfeergeluid op Player
         AddAmbientAudio();
@@ -214,6 +221,52 @@ public static class SBARRealAssets
     {
         for (int i = parent.childCount - 1; i >= 0; i--)
             Object.DestroyImmediate(parent.GetChild(i).gameObject);
+    }
+
+    // Klembord wordt een interactief voorwerp dat het notitieboekje opent (E/klik).
+    static void PlaceNotebookClipboard(Transform holder)
+    {
+        var model = Load(P_CLIPBOARD);
+        if (model == null) return;
+
+        // Root draagt collider + component; model als visuele child.
+        var root = new GameObject("Klembord");
+        root.transform.SetParent(holder, false);
+        root.transform.position    = CLIP_POS;
+        root.transform.eulerAngles = CLIP_EULER;
+        root.transform.localScale  = CLIP_SCALE;
+
+        var vis = (GameObject)PrefabUtility.InstantiatePrefab(model);
+        vis.name = "ModelVisual";
+        vis.transform.SetParent(root.transform, false);
+        FixRenderersURP(vis);
+
+        // BoxCollider passend om de mesh → raycaster kan 'm aanwijzen.
+        var bc = root.AddComponent<BoxCollider>();
+        FitBox(bc, root);
+
+        // Interactief maken + koppelen aan het notitieboekje uit de scène.
+        var prop = root.AddComponent<SBAR.Interaction.NotebookProp>();
+        var mgr = Object.FindObjectOfType<SBAR.Core.SBARManager>();
+        if (mgr != null && mgr.notebookUI != null) prop.SetNotebook(mgr.notebookUI);
+        else Debug.LogWarning("[SBAR] NotebookUI niet gevonden — koppel handmatig op het Klembord (NotebookProp).");
+    }
+
+    static void FitBox(BoxCollider bc, GameObject root)
+    {
+        var rends = root.GetComponentsInChildren<Renderer>();
+        if (rends.Length == 0) { bc.size = Vector3.one * 0.3f; return; }
+        var b = rends[0].bounds;
+        for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+
+        bc.center = root.transform.InverseTransformPoint(b.center);
+        var s = root.transform.lossyScale;
+        bc.size = new Vector3(
+            s.x != 0f ? b.size.x / Mathf.Abs(s.x) : b.size.x,
+            s.y != 0f ? b.size.y / Mathf.Abs(s.y) : b.size.y,
+            s.z != 0f ? b.size.z / Mathf.Abs(s.z) : b.size.z);
+        // Klembord is dun → minimale maat zodat het makkelijk aan te wijzen is.
+        bc.size = Vector3.Max(bc.size, Vector3.one * 0.15f);
     }
 
     static void AddAmbientAudio()

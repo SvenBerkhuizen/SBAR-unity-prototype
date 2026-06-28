@@ -20,6 +20,11 @@ namespace SBAR.UI
             if (_notebook != null) _notebook.Changed -= Refresh;
             _notebook = notebook;
             if (_notebook != null) _notebook.Changed += Refresh;
+            if (contentLabel != null)
+            {
+                contentLabel.lineSpacing = 10f;       // regels uit elkaar
+                contentLabel.paragraphSpacing = 16f;  // ruimte tussen SBAR-secties
+            }
             Refresh();
         }
 

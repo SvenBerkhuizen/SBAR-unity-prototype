@@ -75,7 +75,7 @@ namespace SBAR.UI
             bool compleet = _notebook != null && _notebook.HasContent(part);
             bool gedaan = _overgedragen.Contains(part);
 
-            string icoon = compleet ? "✓" : "?";
+            string icoon = compleet ? "[v]" : "?";
             string staat = compleet ? "compleet" : "ontbrekend";
             string doorgegeven = gedaan ? "  — doorgegeven" : "";
             statusLabels[index].text = $"{icoon} {part}: {staat}{doorgegeven}";

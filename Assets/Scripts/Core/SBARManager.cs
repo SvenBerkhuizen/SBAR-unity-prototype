@@ -181,7 +181,9 @@ namespace SBAR.Core
             foreach (var qa in dialogue.vragen) opties.Add(qa.question);
             choiceMenu?.Show(dialogue.vragenPrompt, opties, AskQuestion);
 
-            hud?.SetNextButton(true, false, "Volgende stap", AdvanceToNext);
+            // Vragen zijn optioneel: speler mag altijd door, ook zonder (of met 'foute') vragen.
+            // Feedback achteraf rekent met aantal relevante vragen → ruimte voor fouten.
+            hud?.SetNextButton(true, true, "Volgende stap", AdvanceToNext);
             hud?.SetRepeatButton(true, RepeatCurrent);
         }
 
@@ -214,8 +216,8 @@ namespace SBAR.Core
             SetInvestigatableObjectsActive(true);
 
             // Bouw InvestigationResults voor meetapparaten
-            _satResult  = new InvestigationResult("saturatiemeter", SBARPart.Assessment, "SpO₂ 88% ⚠ afwijkend", isCritical: true);
-            _bpResult   = new InvestigationResult("bloeddrukband",  SBARPart.Assessment, "Bloeddruk 155/95 ⚠ afwijkend", isCritical: true);
+            _satResult  = new InvestigationResult("saturatiemeter", SBARPart.Assessment, "SpO2 88% ! afwijkend", isCritical: true);
+            _bpResult   = new InvestigationResult("bloeddrukband",  SBARPart.Assessment, "Bloeddruk 155/95 ! afwijkend", isCritical: true);
             _tempResult = new InvestigationResult("thermometer",     SBARPart.Assessment, "Temperatuur 37,2 °C normaal", isCritical: false);
 
             var alleResultaten = new List<InvestigationResult> { _satResult, _bpResult, _tempResult };
@@ -321,7 +323,7 @@ namespace SBAR.Core
 
                 foreach (var gemist in investigationTracker.GetMissed())
                     if (gemist.isCritical)
-                        lijnen.Add(new FeedbackLine("⚠ Gemist", $"{gemist.id}: {gemist.finding}", FeedbackStatus.Onvoldoende));
+                        lijnen.Add(new FeedbackLine("! Gemist", $"{gemist.id}: {gemist.finding}", FeedbackStatus.Onvoldoende));
             }
 
             // Vragen-evaluatie

@@ -76,11 +76,11 @@ namespace SBAR.UI
                 switch (l.status)
                 {
                     case FeedbackStatus.Goed:
-                        icoon = "✓"; kleur = new Color(0.2f, 0.7f, 0.3f); break;
+                        icoon = "[v]"; kleur = new Color(0.2f, 0.7f, 0.3f); break;
                     case FeedbackStatus.Gedeeltelijk:
                         icoon = "?"; kleur = new Color(0.85f, 0.7f, 0.1f); break;
                     default:
-                        icoon = "✗"; kleur = new Color(0.85f, 0.25f, 0.2f); break;
+                        icoon = "[x]"; kleur = new Color(0.85f, 0.25f, 0.2f); break;
                 }
                 string hex = ColorUtility.ToHtmlStringRGB(kleur);
                 sb.AppendLine($"<color=#{hex}>{icoon}</color> <b>{l.label}:</b> {l.oordeel}");

@@ -7,7 +7,25 @@
       "mcp__unity-mcp__Unity_ManageScene",
       "mcp__unity-mcp__Unity_ListResources",
       "mcp__unity-mcp__Unity_GetUserGuidelines",
-      "mcp__unity-mcp__Unity_GetSha"
+      "mcp__unity-mcp__Unity_GetSha",
+      "Bash(cp /c/Users/svenb/Downloads/Assets/thermometer-termometer-medical-devices/source/Termometer.fbx '/c/Users/svenb/hello world/Assets/Imported/Thermometer/source/')",
+      "Bash(cp /c/Users/svenb/Downloads/Assets/thermometer-termometer-medical-devices/textures/* '/c/Users/svenb/hello world/Assets/Imported/Thermometer/textures/')",
+      "Bash(PYTHONIOENCODING=utf-8 python -c ' *)",
+      "Bash(claude mcp *)",
+      "Bash(python -c 'import sys,json *)",
+      "Read(//c/Users/svenb/.unity/relay/**)",
+      "Read(//c/Users/svenb/.unity/**)",
+      "Bash(cd *)",
+      "Bash(\"C:/Users/svenb/scoop/shims/uvx.exe\" --version)",
+      "Bash(netstat -ano)",
+      "Bash(\"C:/Users/svenb/scoop/shims/uvx.exe\" --offline --from mcpforunityserver==9.7.3 mcp-for-unity --help)",
+      "mcp__unity-mcp__manage_scene",
+      "mcp__unity-mcp__read_console",
+      "mcp__unity-mcp__Unity_ManageGameObject",
+      "mcp__unity-mcp__find_gameobjects",
+      "mcp__unity-mcp__manage_camera",
+      "mcp__unity-mcp__manage_components",
+      "mcp__unity-mcp__manage_gameobject"
     ]
   }
 }
