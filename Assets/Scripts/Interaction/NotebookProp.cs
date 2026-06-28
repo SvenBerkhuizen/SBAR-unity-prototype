@@ -11,6 +11,9 @@ namespace SBAR.Interaction
     {
         [SerializeField] private NotebookUI notebookUI;
 
+        // Klembord toont zijn notitieboek-tekst altijd (niet hover-gated).
+        protected override bool UseHoverLabel => false;
+
         public void SetNotebook(NotebookUI ui) => notebookUI = ui;
 
         public override void OnInteract()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 namespace SBAR.Interaction
 {
@@ -11,11 +12,15 @@ namespace SBAR.Interaction
         private Renderer _renderer;
         private MaterialPropertyBlock _mpb;
         private bool _hovered;
+        private TMP_Text _hoverLabel;
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int LegacyColorId = Shader.PropertyToID("_Color");
 
         protected Color BaseColor { get; private set; } = Color.gray;
         protected Color IdleColor { get; set; } = Color.gray;
+
+        /// <summary>Subklassen die hun label altijd zichtbaar willen (bv. notitieboek) zetten dit op false.</summary>
+        protected virtual bool UseHoverLabel => true;
 
         protected virtual void Awake()
         {
@@ -29,17 +34,26 @@ namespace SBAR.Interaction
             }
             IdleColor = BaseColor;
             ApplyColor(IdleColor);
+
+            // Label (hint/waarde) start verborgen; alleen tonen bij hover → geen muur-clutter.
+            if (UseHoverLabel)
+            {
+                _hoverLabel = GetComponentInChildren<TMP_Text>(true);
+                if (_hoverLabel != null) _hoverLabel.gameObject.SetActive(false);
+            }
         }
 
         public virtual void OnHoverEnter()
         {
             _hovered = true;
+            if (_hoverLabel != null) _hoverLabel.gameObject.SetActive(true);
             Refresh();
         }
 
         public virtual void OnHoverExit()
         {
             _hovered = false;
+            if (_hoverLabel != null) _hoverLabel.gameObject.SetActive(false);
             Refresh();
         }
 

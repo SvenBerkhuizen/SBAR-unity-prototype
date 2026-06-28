@@ -46,3 +46,7 @@ crashlytics-build.properties
 
 # Eigen archief (niet nodig in repo)
 /_archived_editor_scripts/
+
+# Dev screenshots (MCP)
+Assets/Screenshots/
+Assets/Screenshots.meta
