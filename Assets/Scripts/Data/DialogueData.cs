@@ -18,7 +18,8 @@ namespace SBAR.Core
 
         public string ToLine()
         {
-            return $"{label}: {value}";
+            // OE-D3: afwijkend nooit alleen via kleur tonen; tekst/icoon-marker toevoegen.
+            return afwijkend ? $"{label}: {value}  ⚠ afwijkend" : $"{label}: {value}";
         }
     }
 

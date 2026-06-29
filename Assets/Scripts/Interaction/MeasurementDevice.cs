@@ -21,6 +21,7 @@ namespace SBAR.Interaction
         private readonly List<VitalReading> _readings = new List<VitalReading>();
         private Coroutine _blinkRoutine;
         private Collider _collider;
+        private bool _alarm;
 
         public bool Gemeten { get; private set; }
         public IReadOnlyList<VitalReading> Readings => _readings;
@@ -50,23 +51,24 @@ namespace SBAR.Interaction
 
         public override void OnInteract()
         {
-            ShowReadings();
+            bool eerste = !Gemeten;
+            Gemeten = true;          // vóór StopAlarmBlink: voorkomt dat ShowName() de readings overschrijft
             StopAlarmBlink();
-            if (!Gemeten)
-            {
-                Gemeten = true;
-                Measured?.Invoke(this);
-            }
+            ShowReadings();
+            if (eerste) Measured?.Invoke(this);
         }
 
         public void StartAlarmBlink()
         {
+            _alarm = true;
+            if (!Gemeten) ShowName();
             if (_blinkRoutine == null)
                 _blinkRoutine = StartCoroutine(BlinkRoutine());
         }
 
         public void StopAlarmBlink()
         {
+            _alarm = false;
             if (_blinkRoutine != null)
             {
                 StopCoroutine(_blinkRoutine);
@@ -74,6 +76,7 @@ namespace SBAR.Interaction
             }
             IdleColor = BaseColor;
             Refresh();
+            if (!Gemeten) ShowName();
         }
 
         private IEnumerator BlinkRoutine()
@@ -89,7 +92,10 @@ namespace SBAR.Interaction
 
         private void ShowName()
         {
-            if (waardeLabel != null) waardeLabel.text = $"<b>{deviceNaam}</b>\n\n[meet: E / klik]";
+            if (waardeLabel == null) return;
+            // OE-D3: alarmstatus ook in tekst, niet alleen via knipperkleur.
+            string alarm = _alarm ? "<b>⚠ ALARM — meet direct</b>\n" : "";
+            waardeLabel.text = $"{alarm}<b>{deviceNaam}</b>\n\n[meet: E / klik]";
         }
 
         private void ShowReadings()
