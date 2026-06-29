@@ -30,6 +30,8 @@ namespace SBAR.UI
         [SerializeField] private TMP_Text controlsHint;
         [SerializeField] private GameObject helpPanel;
         [SerializeField] private KeyCode helpKey = KeyCode.H;
+        [Tooltip("Oproepbare hulp-knop (OE-D6): werkt met controller-ray, geen toetsenbord nodig.")]
+        [SerializeField] private Button helpButton;
 
         private float _timeLeft;
         private bool _timerRunning;
@@ -45,14 +47,24 @@ namespace SBAR.UI
             if (helpPanel != null) helpPanel.SetActive(false);
             if (briefingPanel != null) briefingPanel.SetActive(false);
             if (timerPanel != null) timerPanel.SetActive(false);
+            if (helpButton != null)
+            {
+                helpButton.onClick.RemoveAllListeners();
+                helpButton.onClick.AddListener(ToggleHelp);
+            }
         }
 
         private void Update()
         {
-            if (Input.GetKeyDown(helpKey) && helpPanel != null)
-                helpPanel.SetActive(!helpPanel.activeSelf);
+            if (Input.GetKeyDown(helpKey)) ToggleHelp();
 
             if (_timerRunning) TickTimer();
+        }
+
+        // OE-D6: oproepbare hulp — via H-toets (desktop) of HUD-knop (VR-controller).
+        public void ToggleHelp()
+        {
+            if (helpPanel != null) helpPanel.SetActive(!helpPanel.activeSelf);
         }
 
         // --- Tijdslimiet ---
