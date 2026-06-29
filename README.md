@@ -1,6 +1,6 @@
 # SBAR Unity Trainingsprototype
 
-Een interactief trainingsscenario in Unity waarin verpleegkundestudenten de **SBAR-methodiek** (Situation, Background, Assessment, Recommendation) oefenen aan de hand van een klinische casus.
+Een interactief **VR-trainingsscenario** in Unity waarin verpleegkundestudenten de **SBAR-methodiek** (Situation, Background, Assessment, Recommendation) oefenen aan de hand van een klinische casus. Speelbaar met een Meta Quest-headset, in de XR Device Simulator én met muis/toetsenbord op een laptop.
 
 ## Casus
 
@@ -13,24 +13,44 @@ De simulatie doorloopt zeven fasen:
 1. **Briefing** — een collega vraagt je bij kamer 7 te kijken.
 2. **Binnenkomst** — de patiënt is benauwd; het saturatie-alarm gaat af.
 3. **Vragen** — stel relevante vragen aan de patiënt.
-4. **Onderzoeksfase** — beweeg vrij door de kamer en onderzoek objecten (dossier, medicatielijst, meetapparaten, infuus, verpleegdagboek). Kritieke bevindingen tellen mee in de score.
+4. **Onderzoeksfase** — beweeg vrij door de kamer en onderzoek objecten (dossier, medicatielijst, meetapparaten, infuuszak, verpleegdagboek). Kritieke bevindingen tellen mee in de score. Tijdens deze fase loopt een **tijdslimiet** (richtwaarde 2 min) als zachte druk — bij 0:00 verschijnt een melding, maar de speler mag doorgaan.
 5. **Aanbeveling** — kies een passende vervolgactie.
 6. **Overdracht** — draag elk SBAR-onderdeel over aan de arts.
 7. **Feedback** — beoordeling van volledigheid en gemiste kritieke bevindingen.
 
+De verzamelde informatie komt terecht in een **SBAR-notitieboek** in het gezichtsveld (HUD), met tabs per letter (S/B/A/R) zodat het overzicht niet dichtslibt.
+
 ## Besturing
+
+**VR (Meta Quest):** controller-ray om objecten/UI aan te wijzen, trigger om te onderzoeken/kiezen. Bewegen via teleportatie.
+
+**Laptop / XR Device Simulator:**
 
 | Toets / muis | Actie |
 |--------------|-------|
 | **WASD** | Lopen |
 | **Rechtermuisknop ingedrukt** | Rondkijken |
-| **E** of **linkerklik** | Onderzoeken / interactie |
-| **N** | Notitieboekje openen/sluiten |
+| **E** of **linkerklik** (object in beeldmidden) | Onderzoeken / interactie |
+| **Muisklik** (op knop) | UI-knoppen, keuzes, notitieboek-tabs |
+| **N** | Notitieboek openen/sluiten |
+| **H** of de **? Hulp**-knop | Besturings- en doeluitleg |
+
+> Wereld-objecten interacteren vanaf het beeldmidden (kruis): kijk het object aan en druk **E**. UI-knoppen klik je direct met de muis aan.
+
+## VR & toegankelijkheid
+
+- **XR:** XR Interaction Toolkit 3.5.1 + OpenXR, Meta Quest feature-set en Oculus Touch controller-profielen. Testen kan zonder headset via de **XR Device Simulator**.
+- **World-space HUD** die met de blik mee-draait (yaw-follow), inclusief notitieboek, ondertitels en hulp.
+- **Toegankelijkheid** (uit de ontwerpeisen):
+  - Ondertiteling bij alle gesproken tekst.
+  - Knop-/menualternatief naast spraak; kleur wordt nooit als enige informatiedrager gebruikt (afwijkende waarden ook in tekst).
+  - Oproepbare hulp via toets én HUD-knop, en een zachte tijdslimiet i.p.v. afstraffende feedback.
 
 ## Openen
 
 - **Unity-versie:** 6000.4.7f1 (Unity 6)
 - **Render pipeline:** Universal Render Pipeline (URP)
+- **Build-doel:** standalone Meta Quest `.apk` (Android, IL2CPP, ARM64, min. API 32). Configuratie staat in het project; bouwen via `BuildPipeline` / Build Profiles.
 1. Clone de repo.
 2. Open de map als project in Unity Hub (juiste versie).
 3. Laat Unity de packages oplossen (o.a. `com.unity.cloud.gltfast` voor `.glb`-modellen).
@@ -63,14 +83,15 @@ In de Unity-menubalk onder **SBAR**:
 
 ## Status
 
-Werkend prototype voor gebruikerstests. De volledige SBAR-flow is speelbaar met echte modellen, audio en feedbackscoring.
+Werkend VR-prototype voor gebruikerstests. De volledige SBAR-flow is speelbaar met echte modellen, audio, world-space UI, een SBAR-notitieboek met tabs, tijdslimiet en feedbackscoring. Interactie werkt zowel met VR-controllers als met muis/toetsenbord in de simulator.
 
 ### Bekende punten / vervolg
 
+- Nog niet op fysieke Quest-hardware getest; controller-interactie kan na de eerste headset-test bijgesteld worden.
+- De geïnstalleerde `.apk` moet opnieuw gebouwd worden om al het recente werk te bevatten.
 - Collega en arts gebruiken (nog) hetzelfde personagemodel.
+- Spraakinteractie (`IVoiceInput`) is voorbereid maar nog niet geïmplementeerd; momenteel werkt alles via knop-/ray-interactie.
 - Modelschaal/positie van enkele assets kan verder bijgesteld worden (TUNE-constants in de Editor-scripts).
-- Thermometer is nog een placeholder.
-- VR-rig nog niet ingebouwd (hooks staan klaar in `PlayerController` / `InteractionRaycaster`).
 
 ## Licenties
 
