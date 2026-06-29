@@ -94,7 +94,7 @@ namespace SBAR.Interaction
         {
             if (waardeLabel == null) return;
             // OE-D3: alarmstatus ook in tekst, niet alleen via knipperkleur.
-            string alarm = _alarm ? "<b>⚠ ALARM — meet direct</b>\n" : "";
+            string alarm = _alarm ? "<b>(!) ALARM - meet direct</b>\n" : "";
             waardeLabel.text = $"{alarm}<b>{deviceNaam}</b>\n\n[meet: E / klik]";
         }
 
