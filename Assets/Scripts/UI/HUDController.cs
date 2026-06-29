@@ -19,10 +19,22 @@ namespace SBAR.UI
         [SerializeField] private TMP_Text nextButtonLabel;
         [SerializeField] private Button repeatButton;
 
+        [Header("Tijdslimiet")]
+        [SerializeField] private GameObject timerPanel;
+        [SerializeField] private TMP_Text timerLabel;
+        [SerializeField] private Color timerNormal = new Color(0.85f, 0.92f, 1f);
+        [SerializeField] private Color timerWaarschuwing = new Color(1f, 0.6f, 0.1f);
+        [SerializeField] private Color timerKritiek = new Color(1f, 0.25f, 0.2f);
+
         [Header("Besturingsoverlay")]
         [SerializeField] private TMP_Text controlsHint;
         [SerializeField] private GameObject helpPanel;
         [SerializeField] private KeyCode helpKey = KeyCode.H;
+
+        private float _timeLeft;
+        private bool _timerRunning;
+        private bool _timerExpired;
+        private Action _onTimerExpire;
 
         private const string ControlsText =
             "WASD: lopen   |   Rechtermuis vasthouden: kijken   |   E/linkermuis: interactie   |   N: notitieboekje   |   H: hulp";
@@ -32,12 +44,63 @@ namespace SBAR.UI
             if (controlsHint != null) controlsHint.text = ControlsText;
             if (helpPanel != null) helpPanel.SetActive(false);
             if (briefingPanel != null) briefingPanel.SetActive(false);
+            if (timerPanel != null) timerPanel.SetActive(false);
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(helpKey) && helpPanel != null)
                 helpPanel.SetActive(!helpPanel.activeSelf);
+
+            if (_timerRunning) TickTimer();
+        }
+
+        // --- Tijdslimiet ---
+
+        public void StartTimer(float seconds, Action onExpire)
+        {
+            _timeLeft = Mathf.Max(0f, seconds);
+            _onTimerExpire = onExpire;
+            _timerRunning = true;
+            _timerExpired = false;
+            if (timerPanel != null) timerPanel.SetActive(true);
+            RenderTimer();
+        }
+
+        public void StopTimer()
+        {
+            _timerRunning = false;
+            if (timerPanel != null) timerPanel.SetActive(false);
+        }
+
+        private void TickTimer()
+        {
+            _timeLeft -= Time.deltaTime;
+            if (_timeLeft <= 0f)
+            {
+                _timeLeft = 0f;
+                _timerRunning = false;
+                RenderTimer();
+                if (!_timerExpired)
+                {
+                    _timerExpired = true;
+                    if (_onTimerExpire != null) _onTimerExpire();
+                }
+                return;
+            }
+            RenderTimer();
+        }
+
+        private void RenderTimer()
+        {
+            if (timerLabel == null) return;
+            int totaal = Mathf.CeilToInt(_timeLeft);
+            int min = totaal / 60;
+            int sec = totaal % 60;
+            timerLabel.text = $"{min}:{sec:00}";
+            timerLabel.color = _timeLeft <= 10f ? timerKritiek
+                             : _timeLeft <= 30f ? timerWaarschuwing
+                             : timerNormal;
         }
 
         public void SetInstruction(string text)

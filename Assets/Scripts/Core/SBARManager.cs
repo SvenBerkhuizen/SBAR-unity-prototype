@@ -45,6 +45,7 @@ namespace SBAR.Core
         private readonly HashSet<MeasurementDevice> _gemeten = new HashSet<MeasurementDevice>();
         private int _gekozenAanbeveling = -1;
         private InvestigationResult _satResult, _bpResult, _tempResult;
+        private bool _timerGestart;
 
         private void Awake()
         {
@@ -117,6 +118,8 @@ namespace SBAR.Core
             _irrelevanteVragenGesteld = 0;
             _gemeten.Clear();
             _gekozenAanbeveling = -1;
+            _timerGestart = false;
+            hud?.StopTimer();
             investigationTracker?.Reset();
             feedbackScreen?.Hide();
             AdvanceTo(SBARScene.Briefing);
@@ -166,8 +169,21 @@ namespace SBAR.Core
             saturatiemeter?.StartAlarmBlink();
             Notebook.Add(SBARPart.Situation, dialogue.binnenkomstSituatie);
 
+            // Tijdslimiet start zodra het scenario echt begint (1x, niet bij herspelen van de scène).
+            if (dialogue.tijdlimietActief && !_timerGestart)
+            {
+                _timerGestart = true;
+                hud?.StartTimer(dialogue.tijdlimietSeconden, OnTimeUp);
+            }
+
             hud?.SetNextButton(true, true, "Volgende stap", AdvanceToNext);
             hud?.SetRepeatButton(true, RepeatCurrent);
+        }
+
+        private void OnTimeUp()
+        {
+            // Niet-bestraffend (OE-C1): toon melding, speler mag gewoon doorgaan.
+            subtitles?.Show("", dialogue.tijdOpMelding, 5f);
         }
 
         private void EnterVragen()
@@ -283,6 +299,7 @@ namespace SBAR.Core
             choiceMenu?.Hide();
             SetWorldInput(false);
             SetDevicesInteractable(false);
+            hud?.StopTimer();
 
             arts?.SetInteractable(true);
             hud?.SetInstruction(dialogue.overdrachtInstructie);

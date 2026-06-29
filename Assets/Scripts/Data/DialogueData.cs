@@ -49,6 +49,14 @@ namespace SBAR.Core
         public string collegaNaam = "Collega";
         public string artsNaam = "Arts";
 
+        [Header("Tijdslimiet (in kaart brengen)")]
+        [Tooltip("Toon een aflopende klok tijdens het in kaart brengen van de SBAR-situatie.")]
+        public bool tijdlimietActief = true;
+        [Tooltip("Aantal seconden om de situatie in kaart te brengen (richtwaarde 120s = 2 min).")]
+        public float tijdlimietSeconden = 120f;
+        [Tooltip("Melding wanneer de tijd op is (niet-bestraffend; speler mag doorgaan).")]
+        public string tijdOpMelding = "Tijd om — rond af en draag over aan de arts.";
+
         [Header("1. Briefing")]
         [TextArea] public string briefingKaart =
             "Mw. De Groot, 74 jaar, opgenomen na heupoperatie, bekend met hartfalen.";
